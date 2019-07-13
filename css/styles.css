@@ -1,0 +1,15 @@
+#passwordAgainError {
+  color:red;
+}
+h1 {
+  color:blue;
+  font-size: 2em;
+  border-bottom: 1px solid blue;
+}
+body{
+  border: 1px solid black;
+  width: 400px;
+}
+.input {
+  width:99%;
+}
