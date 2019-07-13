@@ -7,35 +7,38 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <body>
-  <form id="signupForm" method="post" action="welcome.html">
-  <h1>Sign up</h1>
-  First Name: <input class="input" type="text" name="fName"><br>
-  Last Name:  <input class="input" type="text" name="lName"><br>
-  Gender:     <input class="radio" type="radio" name="gender" value="m">Male
-              <input class="radio"type="radio" name="gender" value="f">female<br><br>
+  <div id="block">
+    <form id="signupForm" method="post" action="welcome.html">
+    <h1>Sign up</h1>
+    First Name: <input class="input" type="text" name="fName"><br>
+    Last Name:  <input class="input" type="text" name="lName"><br>
+    Gender:     <input class="radio" type="radio" name="gender" value="m">Male
+                <input class="radio"type="radio" name="gender" value="f">Female<br><br>
   
-  Zip Code:   <input class="input" type="text" name="zip" id="zip"><br>
-  City:       <span id="city"></span><br>
-  Latitude:   <span id="latitude"></span><br>
-  Longitude:  <span id="longitude"></span><br>
+    Zip Code:   <input class="input" type="text" name="zip" id="zip"><br>
+    <span id="zipError"></span><br>  
+    City:       <span id="city"></span><br>
+    Latitude:   <span id="latitude"></span><br>
+    Longitude:  <span id="longitude"></span><br>
   
-  State: 
-  <select id="state" name="state">
-    <option value="">Select One</option>
-    <!--     <option value="ca">California</option>
-    <option value="ny">New York</option>
-    <option value="tx">Texas</option> -->
-  </select><br>
+    State: 
+    <select id="state" name="state">
+      <option value="">Select One</option>
+      <!--     <option value="ca">California</option>
+      <option value="ny">New York</option>
+      <option value="tx">Texas</option> -->
+    </select><br>
   
-  Select a County <select id="county"></select><br><br>
-  Desired Username: <input class="input" type="text"     id="username" name="username"><br>
-  <span id="userError"></span><br>
-  Password:         <input class="input" type="password" id="password" name="password"><br>
-  Password Again:   <input class="input" type="password" id="passwordAgain"><br>
-  <span id="passwordAgainError"></span><br /><br>
-  <input type="submit" value="Sign Up">
+    Select a County <select id="county"></select><br><br>
+    Desired Username: <input class="input" type="text" id="username" name="username"><br>
+    <span id="userError"></span><br>
+    Password:         <input class="input" type="password" id="password" name="password"><br>
+    Password Again:   <input class="input" type="password" id="passwordAgain"><br>
+    <span id="passwordAgainError"></span><br /><br>
+    <input id ="submitBtn" type="submit" value="Sign Up">
     
   </form>
+    </div>
   <script>
     var usernameAvailable = false;
     // populate all states
@@ -65,13 +68,16 @@
       url: "https://cst336.herokuapp.com/projects/api/cityInfoAPI.php",
       dataType: "json",
       data: {"zip" : $("#zip").val() },
-      success: function(result,status) {
-  
+      success: function(result,status,xhr) {
+      if((xhr.responseText).trim() == "false") {
+          $("#zipError").html("Zip Code Not Found!");
+      }else{
      // alert(result.city);
-      $("#city").html(result.city);
-      $("#latitude").html(result.latitude);
-      $("#longitude").html(result.longitude);
-      }
+        $("#zipError").html("");
+        $("#city").html(result.city);
+        $("#latitude").html(result.latitude);
+        $("#longitude").html(result.longitude);
+      }}
     }) // ajax
 });// zip
       
@@ -120,10 +126,10 @@
 });// state
 
 // form validation
-    $("#signupForm").on("submit",function(e){
+    $("#signupForm").on("submit",function(event){
       //alert("Submitting Form...");
       if (!isFormValid()) {
-        e.preventDefault();  
+        event.preventDefault();  
       }
       
     });
